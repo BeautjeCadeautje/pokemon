@@ -1,37 +1,71 @@
 <?php
-session_start(); // Zorg ervoor dat session_start bovenaan staat
+session_start(); 
 
-// Controleer of de gebruiker is ingelogd, zo niet, stuur ze naar de login pagina
+// Controleer of de gebruiker is ingelogd als admin
 if (!isset($_SESSION['admin_id'])) {
     header("Location: login.php");
     exit;
 }
 
-include 'database.php';
+require 'database.php';
 
-// Voer de query uit om de gegevens van de ingelogde gebruiker op te halen
+// Haal admingegevens op
 $stmt = $pdo->prepare("SELECT * FROM Admins WHERE admin_id = ?");
 $stmt->execute([$_SESSION['admin_id']]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Zoekfunctionaliteit
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+$type_filter = isset($_GET['type']) ? $_GET['type'] : '';
+
+// Bouw de SQL-query met zoek- en typefilter
+$query = "SELECT * FROM Cards WHERE name LIKE ?";
+$params = ["%$search%"];
+
+if ($type_filter) {
+    $query .= " AND type = ?";
+    $params[] = $type_filter;
+}
+
+// Voer de query uit
+$stmt = $pdo->prepare($query);
+$stmt->execute($params);
+$cards = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Verkrijg de beschikbare types voor de filter
+$type_stmt = $pdo->prepare("SELECT DISTINCT type FROM Cards");
+$type_stmt->execute();
+$types = $type_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Admin Dashboard - Pokémon Webshop</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-gray-100">
-    <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-        <h2 class="text-3xl font-bold">Welkom, <?php echo htmlspecialchars($user['name']); ?>!</h2>
-        <p class="mt-4">Je bent ingelogd als <?php echo htmlspecialchars($user['email']); ?>.</p>
+    <!-- Navigatiebalk -->
+    <nav class="bg-gray-800 p-4 text-white flex justify-between">
+        <div class="text-2xl font-bold">Pokémon Webshop - Admin</div>
+        <div>
+            <a href="cards.php" class="mr-4">Kaarten</a>
+            <a href="logout.php" class="text-red-500">Uitloggen</a>
+        </div>
+    </nav>
 
-        <a href="logout.php" class="text-red-600 mt-4 inline-block">Uitloggen</a>
+    <!-- Welkomstbericht -->
+    <div class="bg-white shadow-md rounded-lg p-6 max-w-7xl mx-auto mt-8">
+        <h2 class="text-3xl font-bold">Welkom, <?php echo htmlspecialchars($user['name']); ?>!</h2>
+        <p class="text-gray-600 mt-2">Je bent ingelogd als <?php echo htmlspecialchars($user['email']); ?>.</p>
     </div>
+
+    
+
 </body>
 
 </html>
