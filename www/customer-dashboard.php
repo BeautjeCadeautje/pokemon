@@ -35,10 +35,12 @@ $stmt->execute($params);
 $cards = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Verkrijg de beschikbare types voor de filter
-$type_stmt = $pdo->prepare("SELECT DISTINCT type FROM Cards");
-$type_stmt->execute();
-$types = $type_stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $pdo->query("SELECT Cards.*, Types.type_name FROM Cards 
+                      LEFT JOIN Types ON Cards.type_id = Types.type_id
+                      ORDER BY Cards.name ASC");
+$cards = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="nl">
