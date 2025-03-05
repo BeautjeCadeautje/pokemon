@@ -1,5 +1,5 @@
 <?php
-session_start(); 
+session_start();
 
 // Controleer of de gebruiker is ingelogd als admin
 if (!isset($_SESSION['admin_id'])) {
@@ -33,9 +33,10 @@ $stmt->execute($params);
 $cards = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Verkrijg de beschikbare types voor de filter
-$type_stmt = $pdo->prepare("SELECT DISTINCT type FROM Cards");
-$type_stmt->execute();
-$types = $type_stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $pdo->query("SELECT Cards.*, Types.type_name FROM Cards 
+                      LEFT JOIN Types ON Cards.type_id = Types.type_id
+                      ORDER BY Cards.name ASC");
+$cards = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -52,11 +53,38 @@ $types = $type_stmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- Navigatiebalk -->
     <nav class="bg-gray-800 p-4 text-white flex justify-between">
         <div class="text-2xl font-bold">Pokémon Webshop - Admin</div>
+
+        <div class="relative group">
+            <button class="mr-4 px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600">Kaarten ▾</button>
+            <div class="absolute hidden bg-white text-black rounded-lg shadow-lg group-hover:block">
+                <a href="cards.php" class="block px-4 py-2 hover:bg-gray-200">Bekijken</a>
+                <a href="add-card.php" class="block px-4 py-2 hover:bg-gray-200">Toevoegen</a>
+            </div>
+        </div>
+
+        <div class="relative group">
+            <button class="mr-4 px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600">Klanten ▾</button>
+            <div class="absolute hidden bg-white text-black rounded-lg shadow-lg group-hover:block">
+                <a href="customers.php" class="block px-4 py-2 hover:bg-gray-200">Bekijken</a>
+                <a href="customer-add.php" class="block px-4 py-2 hover:bg-gray-200">Toevoegen</a>
+            </div>
+        </div>
+
+        <div class="relative group">
+            <button class="mr-4 px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600">Types ▾</button>
+            <div class="absolute hidden bg-white text-black rounded-lg shadow-lg group-hover:block">
+                <a href="types.php" class="block px-4 py-2 hover:bg-gray-200">Bekijken</a>
+                <a href="type-add.php" class="block px-4 py-2 hover:bg-gray-200">Toevoegen</a>
+            </div>
+        </div>
+
         <div>
-            <a href="cards.php" class="mr-4">Kaarten</a>
+            <a href="admin-dashboard.php" class="mr-4">Dashboard</a>
             <a href="logout.php" class="text-red-500">Uitloggen</a>
         </div>
     </nav>
+
+
 
     <!-- Welkomstbericht -->
     <div class="bg-white shadow-md rounded-lg p-6 max-w-7xl mx-auto mt-8">
@@ -64,7 +92,7 @@ $types = $type_stmt->fetchAll(PDO::FETCH_ASSOC);
         <p class="text-gray-600 mt-2">Je bent ingelogd als <?php echo htmlspecialchars($user['email']); ?>.</p>
     </div>
 
-    
+
 
 </body>
 
