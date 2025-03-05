@@ -37,34 +37,13 @@ if (!$card) {
 
 <body class="bg-gray-100">
     <nav class="bg-gray-800 p-4 text-white flex justify-between">
-        <div class="text-2xl font-bold">Pokémon Webshop - Admin</div>
+        <div class="text-2xl font-bold">Pokémon Webshop</div>
 
-        <div class="relative group">
-            <button class="mr-4 px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600">Kaarten ▾</button>
-            <div class="absolute hidden bg-white text-black rounded-lg shadow-lg group-hover:block">
-                <a href="cards.php" class="block px-4 py-2 hover:bg-gray-200">Bekijken</a>
-                <a href="add-card.php" class="block px-4 py-2 hover:bg-gray-200">Toevoegen</a>
-            </div>
-        </div>
-
-        <div class="relative group">
-            <button class="mr-4 px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600">Klanten ▾</button>
-            <div class="absolute hidden bg-white text-black rounded-lg shadow-lg group-hover:block">
-                <a href="customers.php" class="block px-4 py-2 hover:bg-gray-200">Bekijken</a>
-                <a href="customer-add.php" class="block px-4 py-2 hover:bg-gray-200">Toevoegen</a>
-            </div>
-        </div>
-
-        <div class="relative group">
-            <button class="mr-4 px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600">Types ▾</button>
-            <div class="absolute hidden bg-white text-black rounded-lg shadow-lg group-hover:block">
-                <a href="types.php" class="block px-4 py-2 hover:bg-gray-200">Bekijken</a>
-                <a href="type-add.php" class="block px-4 py-2 hover:bg-gray-200">Toevoegen</a>
-            </div>
-        </div>
+        
+     
 
         <div>
-            <a href="admin-dashboard.php" class="mr-4">Dashboard</a>
+            <a href="index.php" class="mr-4">Home</a>
             <a href="logout.php" class="text-red-500">Uitloggen</a>
         </div>
     </nav>
